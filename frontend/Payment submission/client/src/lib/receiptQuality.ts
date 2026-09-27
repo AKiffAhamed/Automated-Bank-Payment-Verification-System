@@ -1,5 +1,6 @@
 const MAX_ANALYSIS_SIDE = 1400;
 const OPENCV_FALLBACK_AFTER_MS = 5_000;
+const BLUR_THRESHOLD = 40;
 
 function loadImage(file: File) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -28,7 +29,7 @@ type WorkerResult = ReceiptQuality & { error?: string };
 
 function qualityResult(brightness: number, sharpness: number): ReceiptQuality {
   const isTooDark = brightness < 58;
-  const isTooBlurry = sharpness < 8;
+  const isTooBlurry = sharpness < BLUR_THRESHOLD;
   let message: string | undefined;
   if (isTooDark && isTooBlurry) message = "This receipt looks too dark and blurry. Please upload a brighter, clearer copy.";
   else if (isTooDark) message = "This receipt looks too dark to read. Please upload a brighter image.";

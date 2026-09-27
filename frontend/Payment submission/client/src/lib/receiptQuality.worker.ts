@@ -1,4 +1,5 @@
 const OPENCV_URL = "https://docs.opencv.org/4.x/opencv.js";
+const BLUR_THRESHOLD = 40;
 let openCvPromise: Promise<any> | null = null;
 
 function loadOpenCv() {
@@ -45,7 +46,7 @@ self.onmessage = async (event: MessageEvent<{ pixels: ArrayBuffer; width: number
       cv.meanStdDev(laplacian, mean, stddev);
       const sharpness = Number(stddev.doubleAt(0, 0)) ** 2;
       const isTooDark = brightness < 58;
-      const isTooBlurry = sharpness < 8;
+      const isTooBlurry = sharpness < BLUR_THRESHOLD;
 
       let message: string | undefined;
       if (isTooDark && isTooBlurry) message = "This receipt looks too dark and blurry. Please upload a brighter, clearer copy.";
